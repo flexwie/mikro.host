@@ -1,14 +1,17 @@
-name: Go
+name: Test
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-
-  build:
+  test:
+    strategy:
+      matrix:
+        module: ["common", "user", "models"]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -19,4 +22,4 @@ jobs:
         go-version: 1.18
 
     - name: Test
-      run: go test -v ./...
+      run: go test -v ./${{ matrix.module }}
