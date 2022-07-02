@@ -22,7 +22,7 @@ func decodeGetAllRequest(_ context.Context, r *http.Request) (interface{}, error
 }
 
 func decodeGetOneRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	id := r.URL.
+	return nil, nil
 }
 
 func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
