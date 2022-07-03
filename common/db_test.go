@@ -6,6 +6,7 @@ import (
 )
 
 func TestGetDb(t *testing.T) {
-	db := GetDb("file::memory:?cache=shared")
+	path := ":memory:"
+	db := GetDb(&path)
 	assert.NotNil(t, db)
 }
