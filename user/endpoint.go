@@ -12,7 +12,7 @@ func makeCreateEndpoint(svc UserService) endpoint.Endpoint {
 		v, err := svc.Create(req)
 
 		if err != nil {
-			return models.CreateResponse{err.Error(), v}, nil
+			return nil, err
 		}
 
 		return models.CreateResponse{"", v}, nil
@@ -21,7 +21,11 @@ func makeCreateEndpoint(svc UserService) endpoint.Endpoint {
 
 func makeGetAllEndpoint(svc UserService) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
-		v, _ := svc.GetAll()
+		v, err := svc.GetAll()
+
+		if err != nil {
+			return nil, err
+		}
 
 		return models.GetAllResponse{"", v}, nil
 	}
@@ -29,14 +33,12 @@ func makeGetAllEndpoint(svc UserService) endpoint.Endpoint {
 
 func makeGetOneEndpoint(svc UserService) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
-		req, ok := request.(models.GetOneRequest)
-		if !ok {
-			panic("could not cast")
-		}
+		req := request.(models.GetOneRequest)
+
 		v, err := svc.Get(req.Id)
 
 		if err != nil {
-			return models.GetOneResponse{}, err
+			return nil, err
 		}
 
 		return models.GetOneResponse{Value: v}, nil

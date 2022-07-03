@@ -24,10 +24,10 @@ type GetAllResponse struct {
 }
 
 type GetOneRequest struct {
-	Id string
+	Id uint `json:"id"`
 }
 
 type GetOneResponse struct {
 	Err   `json:"error,omitempty"`
-	Value User `json:"error,omitempty"`
+	Value User `json:"value,omitempty"`
 }

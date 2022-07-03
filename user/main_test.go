@@ -15,23 +15,17 @@ import (
 
 var dbPath = ":memory:"
 
-func TestCreateUser(t *testing.T) {
+func TestCreateHandler(t *testing.T) {
 	Db = common.GetDb(&dbPath)
-	defer func() {
-		sqldb, _ := Db.DB()
-		sqldb.Close()
-	}()
-
-	server := GetCreate()
-	ts := httptest.NewServer(server)
-	defer ts.Close()
 
 	v, err := json.Marshal(models.CreateRequest{Name: "Felix", Mail: "test@mf.de"})
-	res, err := http.Post(ts.URL, "", bytes.NewBuffer(v))
+	req, err := http.NewRequest(http.MethodPost, "/create", bytes.NewBuffer(v))
 	assert.Nil(t, err)
 
-	body, err := ioutil.ReadAll(res.Body)
-	res.Body.Close()
+	rr := httptest.NewRecorder()
+	CreateHandler().ServeHTTP(rr, req)
+
+	body, err := ioutil.ReadAll(rr.Body)
 	assert.Nil(t, err)
 
 	response := models.CreateResponse{}
@@ -49,15 +43,13 @@ func TestGetGetAll(t *testing.T) {
 		Mail: "test",
 	})
 
-	server := GetGetAll()
-	ts := httptest.NewServer(server)
-	defer ts.Close()
-
-	res, err := http.Get(ts.URL)
+	req, err := http.NewRequest(http.MethodPost, "/get-all", nil)
 	assert.Nil(t, err)
 
-	body, err := ioutil.ReadAll(res.Body)
-	res.Body.Close()
+	rr := httptest.NewRecorder()
+	GetAllHandler().ServeHTTP(rr, req)
+
+	body, err := ioutil.ReadAll(rr.Body)
 	assert.Nil(t, err)
 
 	response := models.GetAllResponse{}
@@ -74,19 +66,21 @@ func TestGetGetOne(t *testing.T) {
 	Db.Model(&models.User{}).Create(&models.User{
 		Name: "Test",
 		Mail: "test",
-	}).First(&testUser, "name = Test")
+	}).First(&testUser, "name = 'Test'")
 	assert.NotEqualValues(t, "", testUser.Name)
+	assert.NotNil(t, testUser)
 
-	server := GetGetOne()
-	ts := httptest.NewServer(server)
-	defer ts.Close()
+	v, err := json.Marshal(models.GetOneRequest{Id: testUser.ID})
+	req, err := http.NewRequest(http.MethodGet, "/by-id", bytes.NewBuffer(v))
+	//assert.Nilf(t, err, "expected nil but got %s", err.Error())
 
-	res, err := http.Get(fmt.Sprintf("%s/?id=%d", ts.URL, testUser.ID))
-	assert.Nilf(t, err, "expected nil but got %s", err.Error())
+	rr := httptest.NewRecorder()
+	GetOneHandler().ServeHTTP(rr, req)
 
-	body, err := ioutil.ReadAll(res.Body)
-	res.Body.Close()
+	body, err := ioutil.ReadAll(rr.Body)
 	assert.Nil(t, err)
+
+	fmt.Println(string(body))
 
 	response := models.GetOneResponse{}
 	err = json.Unmarshal(body, &response)

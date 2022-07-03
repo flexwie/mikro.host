@@ -12,8 +12,8 @@ import (
 var db *gorm.DB
 
 func GetDb(path *string) *gorm.DB {
-	// return existing connection
-	if db != nil {
+	// return existing connection; not for tests
+	if db != nil && path == nil {
 		return db
 	}
 
