@@ -4,6 +4,7 @@ import (
 	"github.com/go-kit/kit/endpoint"
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/go-kit/log"
+	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 	"mikro.host/common"
 	"net/http"
@@ -34,15 +35,30 @@ func GetGetAll() *httptransport.Server {
 	return getAllHandler
 }
 
+func GetGetOne() *httptransport.Server {
+	var getOneEndpoint endpoint.Endpoint
+	getOneEndpoint = makeGetOneEndpoint(svc)
+	getOneEndpoint = common.LoggingMiddleware(logger, "getAll")(getOneEndpoint)
+
+	httptransport.ServerBefore()
+	getOneHandler := httptransport.NewServer(getOneEndpoint, decodeGetOneRequest, encodeResponse)
+	return getOneHandler
+}
+
 func main() {
-	Db = common.GetDb("test.db")
+	Db = common.GetDb(nil)
 
-	http.Handle("/", common.Method(http.MethodPost, GetCreate()))
-	http.Handle("/", common.Method(http.MethodGet, GetGetAll()))
+	r := mux.NewRouter()
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		panic(err)
-	}
+	r.HandleFunc("/", GetCreate().ServeHTTP).Methods(http.MethodPost)
+	r.HandleFunc("/", GetGetAll().ServeHTTP).Methods(http.MethodGet)
+	r.HandleFunc("/{id}", GetGetOne().ServeHTTP).Methods(http.MethodGet)
+
+	//http.Handle("/", common.Method(http.MethodPost, GetCreate()))
+	//http.Handle("/", common.Method(http.MethodGet, GetGetAll()))
+	//http.Handle("/:id", common.Method(http.MethodGet, GetGetOne()))
+
+	http.Handle("/", r)
 }
 
 func init() {

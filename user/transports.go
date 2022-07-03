@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"github.com/gorilla/mux"
 	"mikro.host/models"
 	"net/http"
 )
@@ -17,12 +19,17 @@ func decodeCreateRequest(_ context.Context, r *http.Request) (interface{}, error
 	return req, nil
 }
 
-func decodeGetAllRequest(_ context.Context, r *http.Request) (interface{}, error) {
+func decodeGetAllRequest(_ context.Context, _ *http.Request) (interface{}, error) {
 	return nil, nil
 }
 
 func decodeGetOneRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	return nil, nil
+	vars := mux.Vars(r)
+	if vars["id"] == "" {
+		return nil, errors.New("missing id in path")
+	}
+
+	return &models.GetOneRequest{vars["id"]}, nil
 }
 
 func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {

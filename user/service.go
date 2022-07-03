@@ -8,7 +8,7 @@ import (
 type UserService interface {
 	Create(user models.CreateRequest) (models.User, error)
 	GetAll() ([]models.User, error)
-	Get(info models.GetOneRequest) (models.User, error)
+	Get(id string) (models.User, error)
 }
 
 type userService struct {
@@ -29,8 +29,8 @@ func (userService) GetAll() (users []models.User, err error) {
 	return users, nil
 }
 
-func (userService) GetOne(input models.GetOneRequest) (user models.User, err error) {
-	Db.Model(&models.User{}).First(&user, "id = ?", input.Id)
+func (userService) Get(id string) (user models.User, err error) {
+	Db.Model(&models.User{}).First(&user, "id = ?", id)
 	if user.Mail == "" {
 		return user, errors.New("not found")
 	}
