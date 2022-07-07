@@ -31,3 +31,20 @@ type GetOneResponse struct {
 	Err   `json:"error,omitempty"`
 	Value User `json:"value,omitempty"`
 }
+
+type UpdateRequest struct {
+	User
+}
+
+type UpdateResponse struct {
+	Err   `json:"error,omitempty"`
+	Value User `json:"value,omitempty"`
+}
+
+type DeleteRequest struct {
+	Id uint `json:"id"`
+}
+
+type DeleteResponse struct {
+	Err `json:"error,omitempty"`
+}

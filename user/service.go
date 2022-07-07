@@ -9,6 +9,8 @@ type UserService interface {
 	Create(user models.CreateRequest) (models.User, error)
 	GetAll() ([]models.User, error)
 	Get(id uint) (models.User, error)
+	Update(changes models.UpdateRequest) (models.User, error)
+	Delete(id uint) error
 }
 
 type userService struct {
@@ -36,4 +38,20 @@ func (userService) Get(id uint) (user models.User, err error) {
 	}
 
 	return user, nil
+}
+
+func (userService) Update(changes models.UpdateRequest) (user models.User, err error) {
+	Db.Model(&models.User{}).Updates(models.User{}).First(&user, "")
+	if user.ID == 0 {
+		return user, common.NotFound
+	}
+
+	return user, nil
+}
+
+func (u userService) Delete(id uint) error {
+	if err := Db.Where("id = ?", id).Delete(&models.User{}).Error; err != nil {
+		return err
+	}
+	return nil
 }

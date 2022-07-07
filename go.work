@@ -4,4 +4,6 @@ use (
 	"./models"
 	"./user"
 	"./common"
+	"./runner"
+	"./deploy"
 )

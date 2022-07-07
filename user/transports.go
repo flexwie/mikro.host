@@ -31,6 +31,26 @@ func decodeGetOneRequest(_ context.Context, r *http.Request) (interface{}, error
 	return req, nil
 }
 
+func decodeUpdateRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var req models.UpdateRequest
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+func decodeDeleteRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var req models.DeleteRequest
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	return json.NewEncoder(w).Encode(response)
 }

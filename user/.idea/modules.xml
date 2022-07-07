@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../common/.idea/common.iml" filepath="$PROJECT_DIR$/../common/.idea/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../deploy/.idea/deploy.iml" filepath="$PROJECT_DIR$/../deploy/.idea/deploy.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/mikro.host.iml" filepath="$PROJECT_DIR$/.idea/mikro.host.iml" />
       <module fileurl="file://$PROJECT_DIR$/../models/.idea/models.iml" filepath="$PROJECT_DIR$/../models/.idea/models.iml" />
     </modules>

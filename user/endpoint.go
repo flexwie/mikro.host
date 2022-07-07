@@ -44,3 +44,17 @@ func makeGetOneEndpoint(svc UserService) endpoint.Endpoint {
 		return models.GetOneResponse{Value: v}, nil
 	}
 }
+
+func makeUpdateEndpoint(svc UserService) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		req := request.(models.UpdateRequest)
+
+		v, err := svc.Update(req)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return models.UpdateResponse{v}, nil
+	}
+}
