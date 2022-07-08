@@ -36,15 +36,15 @@ func main() {
 	go func() {
 		defer wg.Done()
 
-		tick := time.Tick(5 * time.Second)
+		ticker := time.NewTicker(5 * time.Second)
+		defer ticker.Stop()
+
 		for {
 			select {
 			case <-ctx.Done():
-				fmt.Println("ctx done, destroy resources")
-				//cleanupServer(server)
-				//cleanupKey(key)
+				fmt.Println("ctx done")
 				return
-			case <-tick:
+			case <-ticker.C:
 				out, err := remoteRun("root", server.PublicNet.IPv4.IP.String(), priv, "echo 'Welcome to this world'")
 				if err == nil {
 					fmt.Println(out)
@@ -54,7 +54,6 @@ func main() {
 		}
 	}()
 
-	fmt.Println("did the thing")
 	wg.Wait()
 }
 

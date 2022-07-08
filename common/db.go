@@ -34,8 +34,13 @@ func GetDb(path *string) *gorm.DB {
 		panic("could not open db connection")
 	}
 
+	// auto create enum for now
+	db.Exec("IF NOT EXISTS CREATE TYPE deployment_status AS ENUM ('pending', 'success', 'failure');")
+
 	// auto migrate models for now
 	err = db.AutoMigrate(&models.User{})
+	err = db.AutoMigrate(&models.Cluster{})
+	err = db.AutoMigrate(&models.Server{})
 	if err != nil {
 		panic("could not migrate db")
 	}

@@ -6,4 +6,5 @@ use (
 	"./common"
 	"./runner"
 	"./deploy"
+	"./cluster"
 )

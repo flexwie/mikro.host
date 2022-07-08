@@ -24,16 +24,16 @@ func (e DeploymentStatus) Value() (driver.Value, error) {
 
 type Server struct {
 	gorm.Model
-	Name         string
-	ID           string
-	PrivateKey   string
-	IP           string
-	Subscription string
-	State        DeploymentStatus `json:"deployment_status" sql:"type:deployment_status"`
+	Name       string
+	ID         string
+	PrivateKey string
+	IP         string
+	State      DeploymentStatus `json:"deployment_status" sql:"type:deployment_status"`
+	ClusterID  uint
 }
 
 type CreateServerRequest struct {
-	Subscription string `json:"subscription"`
+	Cluster string `json:"cluster_id"`
 }
 
 type CreateServerResponse struct {

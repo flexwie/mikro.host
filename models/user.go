@@ -4,8 +4,9 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Name string
-	Mail string
+	Name    string
+	Mail    string
+	Cluster []Cluster
 }
 
 type CreateRequest struct {
